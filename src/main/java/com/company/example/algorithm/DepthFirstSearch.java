@@ -33,6 +33,7 @@ public class DepthFirstSearch extends AlgorithmBase {
 
             setCellState(currentCell);
 
+            s.addAll(getValidAdjacentCells(currentCell));
         } else {
             visitedTimer.stop();
             setRunning(false);
