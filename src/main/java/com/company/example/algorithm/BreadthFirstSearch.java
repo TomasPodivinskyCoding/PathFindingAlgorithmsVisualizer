@@ -1,25 +1,27 @@
 package com.company.example.algorithm;
 
 import com.company.example.enums.State;
-import com.company.example.view.BoardPanel;
 import com.company.example.view.BoardCell;
+import com.company.example.view.BoardPanel;
 
 import java.awt.event.ActionEvent;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class DepthFirstSearch extends AlgorithmBase {
+public class BreadthFirstSearch extends AlgorithmBase {
 
-    private final Stack<BoardCell> s = new Stack<>();
+    private final Queue<BoardCell> q = new LinkedList<>();
 
-    public DepthFirstSearch(BoardPanel boardPanel) {
+    public BreadthFirstSearch(BoardPanel boardPanel) {
         super(boardPanel);
     }
 
+    @Override
     public void solve() {
         if (isNotRunning()) {
             setRunning(true);
             visited = new boolean[boardPanel.getBoard().length][boardPanel.getBoard()[0].length];
-            s.add(boardPanel.getStart());
+            q.add(boardPanel.getStart());
             visitedTimer.start();
             boardPanel.disableMouseListener();
         }
@@ -27,8 +29,8 @@ public class DepthFirstSearch extends AlgorithmBase {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!s.isEmpty()) {
-            BoardCell boardCell = s.pop();
+        if (!q.isEmpty()) {
+            BoardCell boardCell = q.poll();
 
             if (boardCell == boardPanel.getFinish()) {
                 visitedTimer.stop();
@@ -67,7 +69,7 @@ public class DepthFirstSearch extends AlgorithmBase {
         if (!visited[row][column]) {
             visited[row][column] = true;
             if (boardPanel.getBoard()[row][column].getState() == State.WALL) return;
-            s.add(boardPanel.getBoard()[row][column]);
+            q.add(boardPanel.getBoard()[row][column]);
             boardPanel.getBoard()[row][column].setParent(parent);
         }
     }

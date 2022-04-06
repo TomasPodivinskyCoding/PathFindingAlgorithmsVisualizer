@@ -6,8 +6,13 @@ import com.company.example.view.BoardPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
 
 public abstract class AlgorithmBase implements ActionListener {
+
+    protected boolean[][] visited;
+
+    protected static boolean running = false;
 
     private BoardCell finish;
 
@@ -40,4 +45,11 @@ public abstract class AlgorithmBase implements ActionListener {
         this.finalPathTimer.start();
     }
 
+    public static boolean isNotRunning() {
+        return !running;
+    }
+
+    public static void setRunning(boolean running) {
+        AlgorithmBase.running = running;
+    }
 }
