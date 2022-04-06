@@ -1,9 +1,8 @@
 package com.company.example.view;
 
-import com.company.example.State;
+import com.company.example.enums.State;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class BoardCell extends JButton {
 

@@ -1,13 +1,13 @@
 package com.company.example.view;
 
-import com.company.example.BoardListener;
-import com.company.example.State;
+import com.company.example.listeners.BoardListener;
+import com.company.example.enums.State;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class Board extends JPanel {
+public class BoardPanel extends JPanel {
 
     private final int rows = 30;
     private final int cols = 30;
@@ -17,10 +17,11 @@ public class Board extends JPanel {
     private BoardCell start;
     private BoardCell finish;
 
-    public Board() {
+    private final BoardListener boardListener = new BoardListener(this);
+
+    public BoardPanel() {
         setUpBoard();
 
-        BoardListener boardListener = new BoardListener(this);
         this.addMouseListener(boardListener);
         this.addMouseMotionListener(boardListener);
     }
@@ -68,17 +69,21 @@ public class Board extends JPanel {
             case START -> color = Color.GREEN;
             case WALL -> color = Color.BLACK;
             case PATH -> color = Color.YELLOW;
+            case VISITED -> color = Color.CYAN;
         }
         return color;
     }
 
     public BoardCell getCellAt(int x, int y) {
-        // TODO handle out of bounds
         double width = (double) this.getWidth() / cols;
         double height = (double) this.getHeight() / rows;
         int column = (int) (x / width);
         int row = (int) (y / height);
-        return board[row][column];
+        return isInBounds(row, column) ? board[row][column] : null;
+    }
+
+    private boolean isInBounds(int column, int row) {
+        return row >= 0 && column >= 0 && row < this.rows && column < this.cols;
     }
 
     public BoardCell[][] getBoard() {
@@ -91,5 +96,25 @@ public class Board extends JPanel {
 
     public BoardCell getFinish() {
         return finish;
+    }
+
+    public void disableMouseListener() {
+        removeMouseListener(this.boardListener);
+        removeMouseMotionListener(this.boardListener);
+    }
+
+    public void enableMouseListener() {
+        this.addMouseListener(boardListener);
+        this.addMouseMotionListener(boardListener);
+        boardListener.setNeedsClearing(true);
+    }
+
+    public void cleanBoard() {
+        for (BoardCell[] boardCells : board) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (boardCells[j].getState() == State.PATH || boardCells[j].getState() == State.VISITED)
+                    boardCells[j].setState(State.EMPTY);
+            }
+        }
     }
 }

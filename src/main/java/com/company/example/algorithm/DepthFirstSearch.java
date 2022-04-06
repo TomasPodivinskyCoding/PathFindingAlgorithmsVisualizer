@@ -1,60 +1,71 @@
 package com.company.example.algorithm;
 
-import com.company.example.State;
-import com.company.example.view.Board;
+import com.company.example.enums.State;
+import com.company.example.view.BoardPanel;
 import com.company.example.view.BoardCell;
 
+import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Stack;
 
-public class DepthFirstSearch {
+public class DepthFirstSearch extends AlgorithmBase {
 
-    private final Board board;
     private final HashSet<BoardCell> visited = new HashSet<>();
     private final Stack<BoardCell> s = new Stack<>();
 
-    public DepthFirstSearch(Board board) {
-        this.board = board;
+    public DepthFirstSearch(BoardPanel boardPanel) {
+        super(boardPanel);
     }
 
-    public BoardCell solve() {
+    public void solve() {
         visited.clear();
-        s.add(board.getStart());
+        s.add(boardPanel.getStart());
+        visitedTimer.start();
+        boardPanel.disableMouseListener();
+    }
 
-        while (!s.isEmpty()) {
+    private void addToQueue(int row, int column, BoardCell parent) {
+        if (!visited.contains(boardPanel.getBoard()[row][column])) {
+            if (boardPanel.getBoard()[row][column].getState() == State.WALL) return;
+            s.add(boardPanel.getBoard()[row][column]);
+            boardPanel.getBoard()[row][column].setParent(parent);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!s.isEmpty()) {
             BoardCell boardCell = s.pop();
-            if (boardCell == board.getFinish()) {
-                System.out.println("wooooo");
-                return boardCell.parent;
+
+            if (boardCell == boardPanel.getFinish()) {
+                visitedTimer.stop();
+                showFinalPath(boardCell.parent);
+                return;
             }
+
+            if (boardCell.getState() != State.START && boardCell.getState() != State.FINISH)
+                boardPanel.getBoard()[boardCell.row][boardCell.column].setState(State.VISITED);
+
             visited.add(boardCell);
-            int row = boardCell.row - 1;
+            int row, column;
+            row = boardCell.row - 1;
             if (row > -1) {
                 addToQueue(row, boardCell.column, boardCell);
             }
             row = boardCell.row + 1;
-            if (row < board.getBoard().length) {
+            if (row < boardPanel.getBoard().length) {
                 addToQueue(row, boardCell.column, boardCell);
             }
-            int column = boardCell.column - 1;
+            column = boardCell.column - 1;
             if (column > -1) {
                 addToQueue(boardCell.row, column, boardCell);
             }
             column = boardCell.column + 1;
-            if (column < board.getBoard()[0].length) {
+            if (column < boardPanel.getBoard()[0].length) {
                 addToQueue(boardCell.row, column, boardCell);
             }
-        }
-        System.out.println("Finished");
-        return null;
-    }
-
-    private void addToQueue(int row, int column, BoardCell parent) {
-        if (!visited.contains(board.getBoard()[row][column])) {
-            if (board.getBoard()[row][column].getState() == State.WALL) return;
-            s.add(board.getBoard()[row][column]);
-            board.getBoard()[row][column].setParent(parent);
+        } else {
+            visitedTimer.stop();
         }
     }
-
 }

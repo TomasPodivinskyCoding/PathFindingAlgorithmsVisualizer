@@ -1,7 +1,7 @@
 package com.company.example;
 
 import com.company.example.view.AlgorithmToolbar;
-import com.company.example.view.Board;
+import com.company.example.view.BoardPanel;
 import com.company.example.view.Container;
 import com.company.example.view.Settings;
 
@@ -21,8 +21,8 @@ public class Main {
         frame.setSize(new Dimension(640,480));
         frame.setVisible(true);
 
-        Board board = new Board();
-        Container container = new Container(board, new AlgorithmToolbar(board), new Settings());
+        BoardPanel boardPanel = new BoardPanel();
+        Container container = new Container(boardPanel, new AlgorithmToolbar(boardPanel), new Settings());
         frame.add(container);
 
         frame.repaint();
