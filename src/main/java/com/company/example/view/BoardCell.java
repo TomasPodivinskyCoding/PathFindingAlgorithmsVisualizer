@@ -10,12 +10,12 @@ public class BoardCell extends JButton {
     public int row;
     public int column;
     public BoardCell parent;
+    public int distance = Integer.MAX_VALUE;
 
-    public BoardCell(State state, int row, int column, BoardCell parent) {
+    public BoardCell(State state, int row, int column) {
         this.state = state;
         this.row = row;
         this.column = column;
-        this.parent = parent;
     }
 
     public State getState() {
@@ -29,5 +29,7 @@ public class BoardCell extends JButton {
     public void setParent(BoardCell parent) {
         this.parent = parent;
     }
+
+
 
 }

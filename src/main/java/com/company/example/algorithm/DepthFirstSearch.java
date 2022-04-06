@@ -23,11 +23,21 @@ public class DepthFirstSearch extends AlgorithmBase {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!s.isEmpty()) {
-            s.addAll(getValidAdjacentCells(s.pop()));
+            BoardCell currentCell = s.pop();
+
+            if (currentCell == boardPanel.getFinish()) {
+                handleFinish(currentCell);
+                s.clear();
+                return;
+            }
+
+            setCellState(currentCell);
+
         } else {
             visitedTimer.stop();
             setRunning(false);
             boardPanel.enableMouseListener();
+            s.clear();
         }
     }
 }

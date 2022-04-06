@@ -29,6 +29,7 @@ public abstract class AlgorithmBase implements ActionListener {
         if (finish == null || finish == boardPanel.getStart()) {
             ((Timer) e.getSource()).stop();
             boardPanel.enableMouseListener();
+            setRunning(false);
         } else {
             boardPanel.getBoard()[finish.row][finish.column].setState(State.PATH);
             boardPanel.repaint();
@@ -63,7 +64,6 @@ public abstract class AlgorithmBase implements ActionListener {
     protected void handleFinish(BoardCell boardCell) {
         visitedTimer.stop();
         showFinalPath(boardCell.parent);
-        setRunning(false);
     }
 
     protected void setCellState(BoardCell boardCell) {
@@ -85,13 +85,6 @@ public abstract class AlgorithmBase implements ActionListener {
 
     protected ArrayList<BoardCell> getValidAdjacentCells(BoardCell boardCell) {
         ArrayList<BoardCell> validCells = new ArrayList<>();
-        if (boardCell == boardPanel.getFinish()) {
-            handleFinish(boardCell);
-            return validCells;
-        }
-
-        setCellState(boardCell);
-
         int row, column;
         for (int[] adjacentTile : adjacentTiles) {
             row = boardCell.row + adjacentTile[0];
@@ -110,6 +103,7 @@ public abstract class AlgorithmBase implements ActionListener {
             setRunning(true);
             boardPanel.cleanBoard();
             visited = new boolean[boardPanel.getBoard().length][boardPanel.getBoard()[0].length];
+            visited[boardPanel.getStart().row][boardPanel.getStart().column] = true;
             visitedTimer.start();
             boardPanel.disableMouseListener();
         }

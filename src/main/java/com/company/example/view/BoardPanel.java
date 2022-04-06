@@ -29,12 +29,12 @@ public class BoardPanel extends JPanel {
     private void setUpBoard() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
-                board[i][j] = new BoardCell(State.EMPTY, i, j, null);
+                board[i][j] = new BoardCell(State.EMPTY, i, j);
             }
         }
-        board[0][0] = new BoardCell(State.START, 0, 0, null);
+        board[0][0] = new BoardCell(State.START, 0, 0);
         start = board[0][0];
-        board[rows - 1][cols - 1] = new BoardCell(State.FINISH, rows - 1, cols - 1, null);
+        board[rows - 1][cols - 1] = new BoardCell(State.FINISH, rows - 1, cols - 1);
         finish = board[rows - 1][cols - 1];
     }
 
