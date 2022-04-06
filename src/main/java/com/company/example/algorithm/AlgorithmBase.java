@@ -6,7 +6,7 @@ import com.company.example.view.BoardPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public abstract class AlgorithmBase implements ActionListener {
 
@@ -17,6 +17,13 @@ public abstract class AlgorithmBase implements ActionListener {
     private BoardCell finish;
 
     protected BoardPanel boardPanel;
+
+    protected int[][] adjacentTiles = {
+            {0,-1},
+            {1,0},
+            {-1,0},
+            {0,1}
+    };
 
     private final Timer finalPathTimer = new Timer(10, e-> {
         if (finish == null || finish == boardPanel.getStart()) {
@@ -52,4 +59,50 @@ public abstract class AlgorithmBase implements ActionListener {
     public static void setRunning(boolean running) {
         AlgorithmBase.running = running;
     }
+
+    protected void handleFinish(BoardCell boardCell) {
+        visitedTimer.stop();
+        showFinalPath(boardCell.parent);
+        setRunning(false);
+    }
+
+    protected void setCellState(BoardCell boardCell) {
+        if (boardCell.getState() != State.START && boardCell.getState() != State.FINISH)
+            boardPanel.getBoard()[boardCell.row][boardCell.column].setState(State.VISITED);
+    }
+
+    protected boolean isValid(int row, int column) {
+        return isInBounds(row, column) && !visited[row][column] && !isWall(row, column);
+    }
+
+    private boolean isWall(int row, int column) {
+        return boardPanel.getBoard()[row][column].getState() == State.WALL;
+    }
+
+    private boolean isInBounds(int row, int column) {
+        return row >= 0 && column >= 0 && row < boardPanel.getBoard().length && column < boardPanel.getBoard()[0].length;
+    }
+
+    protected ArrayList<BoardCell> getValidAdjacentCells(BoardCell boardCell) {
+        ArrayList<BoardCell> validCells = new ArrayList<>();
+        if (boardCell == boardPanel.getFinish()) {
+            handleFinish(boardCell);
+            return validCells;
+        }
+
+        setCellState(boardCell);
+
+        int row, column;
+        for (int[] adjacentTile : adjacentTiles) {
+            row = boardCell.row + adjacentTile[0];
+            column = boardCell.column + adjacentTile[1];
+            if (isValid(row, column)) {
+                visited[row][column] = true;
+                validCells.add(boardPanel.getBoard()[row][column]);
+                boardPanel.getBoard()[row][column].setParent(boardCell);
+            }
+        }
+        return validCells;
+    }
+
 }
