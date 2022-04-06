@@ -105,4 +105,14 @@ public abstract class AlgorithmBase implements ActionListener {
         return validCells;
     }
 
+    protected void startAlgorithm() {
+        if (isNotRunning()) {
+            setRunning(true);
+            boardPanel.cleanBoard();
+            visited = new boolean[boardPanel.getBoard().length][boardPanel.getBoard()[0].length];
+            visitedTimer.start();
+            boardPanel.disableMouseListener();
+        }
+    }
+
 }

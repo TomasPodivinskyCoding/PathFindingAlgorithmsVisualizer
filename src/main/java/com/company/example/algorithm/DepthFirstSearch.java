@@ -16,13 +16,8 @@ public class DepthFirstSearch extends AlgorithmBase {
     }
 
     public void solve() {
-        if (isNotRunning()) {
-            setRunning(true);
-            visited = new boolean[boardPanel.getBoard().length][boardPanel.getBoard()[0].length];
-            s.add(boardPanel.getStart());
-            visitedTimer.start();
-            boardPanel.disableMouseListener();
-        }
+        s.add(boardPanel.getStart());
+        startAlgorithm();
     }
 
     @Override
@@ -32,6 +27,7 @@ public class DepthFirstSearch extends AlgorithmBase {
         } else {
             visitedTimer.stop();
             setRunning(false);
+            boardPanel.enableMouseListener();
         }
     }
 }

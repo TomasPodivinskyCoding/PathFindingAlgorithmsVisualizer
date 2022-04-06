@@ -18,13 +18,8 @@ public class BreadthFirstSearch extends AlgorithmBase {
 
     @Override
     public void solve() {
-        if (isNotRunning()) {
-            setRunning(true);
-            visited = new boolean[boardPanel.getBoard().length][boardPanel.getBoard()[0].length];
-            q.add(boardPanel.getStart());
-            visitedTimer.start();
-            boardPanel.disableMouseListener();
-        }
+        q.add(boardPanel.getStart());
+        startAlgorithm();
     }
 
     @Override
@@ -34,6 +29,7 @@ public class BreadthFirstSearch extends AlgorithmBase {
         } else {
             visitedTimer.stop();
             setRunning(false);
+            boardPanel.enableMouseListener();
         }
     }
 }
