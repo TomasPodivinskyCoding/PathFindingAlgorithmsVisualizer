@@ -1,10 +1,8 @@
 package com.company.example.algorithm;
 
-import com.company.example.enums.State;
-import com.company.example.view.BoardPanel;
 import com.company.example.view.BoardCell;
+import com.company.example.view.BoardPanel;
 
-import java.awt.event.ActionEvent;
 import java.util.Stack;
 
 public class DepthFirstSearch extends AlgorithmBase {
@@ -15,14 +13,15 @@ public class DepthFirstSearch extends AlgorithmBase {
         super(boardPanel);
     }
 
+    @Override
     public void solve() {
         s.add(boardPanel.getStart());
-        startAlgorithm();
+        startAlgorithm(this);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (!s.isEmpty()) {
+    public void run() {
+        while (!s.isEmpty()) {
             BoardCell currentCell = s.pop();
 
             if (currentCell == boardPanel.getFinish()) {
@@ -34,11 +33,15 @@ public class DepthFirstSearch extends AlgorithmBase {
             setCellState(currentCell);
 
             s.addAll(getValidAdjacentCells(currentCell));
-        } else {
-            visitedTimer.stop();
-            setRunning(false);
-            boardPanel.enableMouseListener();
-            s.clear();
+            try {
+                Thread.sleep(10);
+                boardPanel.repaint();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+        running = false;
+        boardPanel.enableMouseListener();
+        s.clear();
     }
 }

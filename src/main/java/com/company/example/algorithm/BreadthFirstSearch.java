@@ -1,17 +1,14 @@
 package com.company.example.algorithm;
 
-import com.company.example.enums.State;
 import com.company.example.view.BoardCell;
 import com.company.example.view.BoardPanel;
 
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class BreadthFirstSearch extends AlgorithmBase {
 
-    private final Queue<BoardCell> q = new LinkedList<>();
+    private final Queue<BoardCell> s = new LinkedList<>();
 
     public BreadthFirstSearch(BoardPanel boardPanel) {
         super(boardPanel);
@@ -19,29 +16,33 @@ public class BreadthFirstSearch extends AlgorithmBase {
 
     @Override
     public void solve() {
-        q.add(boardPanel.getStart());
-        startAlgorithm();
+        s.add(boardPanel.getStart());
+        startAlgorithm(this);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (!q.isEmpty()) {
-            BoardCell currentCell = q.poll();
+    public void run() {
+        while (!s.isEmpty()) {
+            BoardCell currentCell = s.poll();
 
             if (currentCell == boardPanel.getFinish()) {
                 handleFinish(currentCell);
-                q.clear();
+                s.clear();
                 return;
             }
 
             setCellState(currentCell);
 
-            q.addAll(getValidAdjacentCells(currentCell));
-        } else {
-            visitedTimer.stop();
-            setRunning(false);
-            boardPanel.enableMouseListener();
-            q.clear();
+            s.addAll(getValidAdjacentCells(currentCell));
+            try {
+                Thread.sleep(10);
+                boardPanel.repaint();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+        running = false;
+        boardPanel.enableMouseListener();
+        s.clear();
     }
 }

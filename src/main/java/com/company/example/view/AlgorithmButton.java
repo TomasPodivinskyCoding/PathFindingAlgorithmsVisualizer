@@ -7,7 +7,9 @@ import javax.swing.*;
 public class AlgorithmButton extends JButton {
 
     public AlgorithmButton(AlgorithmBase algorithmBase) {
-        this.addActionListener(e-> algorithmBase.solve());
+        this.addActionListener(e-> {
+            algorithmBase.solve();
+        });
     }
 
 }
