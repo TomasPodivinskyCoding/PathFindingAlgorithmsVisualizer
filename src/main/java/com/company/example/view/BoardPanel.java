@@ -79,11 +79,7 @@ public class BoardPanel extends JPanel {
         double height = (double) this.getHeight() / rows;
         int column = (int) (x / width);
         int row = (int) (y / height);
-        return isInBounds(row, column) ? board[row][column] : null;
-    }
-
-    private boolean isInBounds(int column, int row) {
-        return row >= 0 && column >= 0 && row < this.rows && column < this.cols;
+        return board[Math.min(Math.max(row, 0), board.length - 1)][Math.min(Math.max(column, 0), board[0].length - 1)];
     }
 
     public BoardCell[][] getBoard() {
@@ -116,5 +112,13 @@ public class BoardPanel extends JPanel {
                     boardCells[j].setState(State.EMPTY);
             }
         }
+    }
+
+    public void setStart(BoardCell start) {
+        this.start = start;
+    }
+
+    public void setFinish(BoardCell finish) {
+        this.finish = finish;
     }
 }
